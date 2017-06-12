@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Glucose Predicter</title>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .arrow-up {
+          width: 0;
+          height: 0;
+          border-left: 20px solid transparent;
+          border-right: 20px solid transparent;
+
+          border-bottom: 20px solid #cc0000;
+            float: left;
+        }
+
+        .arrow-down {
+          width: 0;
+          height: 0;
+          border-left: 20px solid transparent;
+          border-right: 20px solid transparent;
+
+          border-top: 20px solid #000000;
+            float: left;
+        }
+
+        .square {
+            width: 20px; height: 20px; background: green;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<script>
+    window.onload = function(){
+          show_vocabulary();
+          show_vocabulary();
+    };
+    function show_vocabulary() {
+        var elem = document.getElementById("myDiv");
+        var state  = elem.style.display;
+        if (state === "block") {
+          elem.style.display = "none";
+        }else {
+            elem.style.display = "block";
+        }
+    }
+</script>
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Hyper/Hypo Predicter</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <h2>Sequence detected</h2>
+    <hr>
+    <div class="row">
+        {% for i in params.sequences_data %}
+            <div  class="col-xs-4">
+                <div class="row"> {{ i[0]|safe }}</div>
+                <div class="row">
+                    {% if i[1] == -1 %}
+                        <div class="col-xs-1"> <div class="arrow-down"></div></div>
+                        <div class="col-xs-1"><h3 style="margin-left: 25px;margin-top: -5px;">Hypoglycemia</h3></div>
+                    {% elif i[1] == 1%}
+                        <div class="col-xs-1"> <div class="arrow-up"></div></div>
+                        <div class="col-xs-1"><h3 style="margin-left: 25px;margin-top: -5px;">Hyperglycemia</h3></div>
+                    {% else %}
+                        <div class="col-xs-1"> <div class="square"></div></div>
+                        <div class="col-xs-1"><h3 style="margin-left: 25px;margin-top: -5px;">Normal</h3></div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{#    <div class="row">#}
+{#            {% if params.type == -1 %}#}
+{#                <div class="col-xs-1"> <div class="arrow-down"></div></div>#}
+{#                <div class="col-xs-1"><h3 style="margin-top: -10px;">Hypoglycemia</h3></div>#}
+{#            {% elif params.type == 1%}#}
+{#                <div class="col-xs-1"> <div class="arrow-up"></div></div>#}
+{#                <div class="col-xs-1"><h3 style="margin-top: -10px;">Hyperglycemia</h3></div>#}
+{#            {% else %}#}
+{#                <div class="col-xs-1"> <div class="square"></div></div>#}
+{#                <div class="col-xs-1"><h3 style="margin-top: -10px;">Normal</h3></div>#}
+{#            {% endif %}#}
+{#        <hr style="clear: both; margin-top: 10px;">#}
+{#    </div>#}
+    <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
+{#        <div class="jumbotron">#}
+            <div class="btn-group col-xs-4" style="float: left; margin-bottom: 20px;">
+                <button class="btn btn-info col-xs-10" onclick="show_vocabulary();"><span>Show/Hide Vocabulary</span></button>
+            </div>
+            <div class="btn-group col-xs-4" style="float: right; clear: right; margin-bottom: 20px;">
+                <form method=get enctype=multipart/form-data action="{{ params.route }}">
+                        <input class="btn btn-success col-xs-10" type=submit value=Continue>
+                </form>
+            </div>
+{#        </div>#}
+    </div>
+</div>
+<div class="container">
+    <div id="myDiv">
+        <h2>Vocabulary</h2>
+        <hr>
+        {% for word in params.vocabulary %}
+            <div class=" col-xs-4"> {{ word|safe }}</div>
+        {% endfor %}
+        <br>
+        <hr>
+        <div class="btn-group col-xs-4" style="float: left; clear: both;margin-bottom: 20px;">
+            <button class="btn btn-info col-xs-10" onclick="show_vocabulary();"><span>Show/Hide Vocabulary</span></button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

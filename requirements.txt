@@ -1,0 +1,8 @@
+flask
+werkzeug
+pandas
+matplotlib
+sklearn
+numpy
+plotly
+lmfit
