@@ -16,7 +16,7 @@ class CGMTester(object):
         if new_db:
             self.loader.load_data_from_csv(file)
             self.loader.generate_fdps(normalized=True)
-            self.best = None
+        self.best = None
         if not os.path.exists("results"):
             os.mkdir("results")
 
