@@ -8,12 +8,15 @@ from sklearn.preprocessing import label_binarize
 import random
 import math
 
+
 class CGMTester(object):
 
-    def __init__(self, file):
-        self.loader.load_data_from_csv(file)
-        self.loader.generate_fdps(normalized=True)
-        self.best = None
+    def __init__(self, file, new_db=True):
+        self.loader = Loader(new_db=new_db)
+        if new_db:
+            self.loader.load_data_from_csv(file)
+            self.loader.generate_fdps(normalized=True)
+            self.best = None
         if not os.path.exists("results"):
             os.mkdir("results")
 
