@@ -100,5 +100,14 @@ ENV/
 # mypy
 .mypy_cache/
 
-#PyCharm
+# PyCharm
 .idea
+
+# Local files
+PredictCGM/all_data_junts_EDU_Sim.csv
+PredictCGM/all_data_junts_EDU_Ideal.csv
+PredictCGM/default_cgm_database.db
+PredictCGM/results/
+PredictCGM/simulated_converter.py
+uploads/
+
