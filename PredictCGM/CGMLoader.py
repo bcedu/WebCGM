@@ -854,7 +854,7 @@ class SequenceModels(ModelsGenerator):
                 ant_sessions = ant_sessions[1:]
                 for ant_id in ant_sessions:
                     args_dict.update({"word_weight": self.calc_sequence_weight(session_id, ant_id)})
-                    if not used_models.get(ant_id):
+                    if used_models.get(ant_id, pd.DataFrame()).empty:
                         ant_model = self.child_mgen.get_models([ant_id], args_dict=args_dict)
                         used_models[ant_id] = ant_model
                     else:
