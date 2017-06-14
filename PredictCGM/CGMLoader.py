@@ -650,7 +650,7 @@ class Loader(object):
         """ Replace current generator with generator_obj """
         self.mgen = generator_obj
 
-    def generate_models(self, args_dict):
+    def generate_models(self, args_dict=None):
         """ Call 'generate_models' method of ModelGenerator"""
         self.mgen.generate_models(args_dict)
 
@@ -675,7 +675,7 @@ class ModelsGenerator(object):
             raise Exception("Loader required")
         self.cursor = self.loader.cursor
 
-    def generate_models(self, args_dict):
+    def generate_models(self, args_dict=None):
         """ Generate models of sessions """
         if self.child_mgen:
             self.child_mgen.generate_models(args_dict)
