@@ -689,6 +689,8 @@ class ModelsGenerator(object):
 
     def get_models_label(self, session_ids):
         """ Returns labels of models of given sessions """
+        if not isinstance(session_ids, list):
+            session_ids = [session_ids]
         return self._get_models_label(session_ids)
 
     def _generate_models(self, args_dict):
