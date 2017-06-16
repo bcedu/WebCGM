@@ -841,11 +841,17 @@ class SequenceModels(ModelsGenerator):
 
     def _get_models(self, session_ids, args_dict):
         new_data = []
-        used_models = {}
         ant_model = None
         weight = args_dict.get("weight", 1)
         sfields = self.loader.get_session_fields(weight=weight)
         pacients_str = "Pacients.sexe*{0}, ((1.0*Pacients.edat)/100)*{0}".format(weight)
+
+        # Get the sequences in a dataframe
+        df = pd.read_sql("Select * From Sequences WHERE sessio_id in ({0});".format(str(session_ids)[1:-1]), self.loader.db_connection)
+        # Get all the session ids that appear in the sequences (removing the repeated)
+        used_sessions = pd.unique(df[df.columns.tolist()[1:]].values.ravel()).tolist()
+        # Get all the models that will be needed
+        used_sessions_models = self.child_mgen.get_models(used_sessions, args_dict=args_dict)
         for session_id in session_ids:
             aux = [x for x in self.cursor.execute("SELECT SessionsNorm.id, {2}, {0} FROM SessionsNorm JOIN Pacients ON pacient_id = Pacients.id WHERE SessionsNorm.id = '{1}'"
                                                   .format(sfields, session_id, pacients_str)).fetchone()]
@@ -855,12 +861,7 @@ class SequenceModels(ModelsGenerator):
             if ant_sessions:
                 ant_sessions = ant_sessions[1:]
                 for ant_id in ant_sessions:
-                    args_dict.update({"word_weight": self.calc_sequence_weight(session_id, ant_id)})
-                    if used_models.get(ant_id, pd.DataFrame()).empty:
-                        ant_model = self.child_mgen.get_models([ant_id], args_dict=args_dict)
-                        used_models[ant_id] = ant_model
-                    else:
-                        ant_model = used_models.get(ant_id)
+                    ant_model = used_sessions_models.loc[used_sessions_models.iloc[:, 0] == ant_id]
                     aux = aux + ant_model.iloc[:, 1:-1].values.tolist()[0]
                 word = self.cursor.execute(
                     "SELECT word_id FROM Sessions WHERE id = '{0}';".format(session_id)
