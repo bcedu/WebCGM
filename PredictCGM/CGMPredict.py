@@ -231,19 +231,7 @@ class SVMPredicter(Predicter):
         return (res_label, score_label, res_word, score_word, bin_labels)
 
 
-class ApatsSVMPredicter(Predicter):
-    def __init__(self, loader=None, kernel='rbf', c=1.0, gamma='auto', words_num=20, seq_len=3, wheights=1):
-        """
-        :param loader:  object of the type Loader. It contains all the data about CGM and
-                        is able to generate the models with which the classifier will work.
-        :param kernel: 'rbf', 'linear', 'poly', 'sigmoid'. Kernel of the algortihm SVM
-        :param words_num:   number of words of the vocabulary generated
-        :param seq_len: number of sessions of the sequences generated
-        """
-        super().__init__(loader, words_num, seq_len, wheights)
-        self._kernel = kernel
-        self._C = c
-        self._gamma = gamma
+class ApatsSVMPredicter(SVMPredicter):
 
     def _predict(self, train_index, test_index):
         """
@@ -311,40 +299,28 @@ class ApatsSVMPredicter(Predicter):
                         maxscore = score
             res_label.append(label)
             # Work only with sessions of the label
-            sessions = [wdata.iloc[z, 0] for z in range(len(wdata)) if ldata_labels[z] == label]
-
-            models = wdata[wdata.id.isin(sessions)]
-            models_labels = models.iloc[:, -1]
-            models = models.iloc[:, 1:-1]
-
-            if not predicters.get(str(label), False):
-                svm = SVC(kernel=self._kernel, C=self._C, gamma=self._gamma)
-                svm.fit(models, models_labels)
-                predicters[str(label)] = svm
-
-            svm = predicters.get(str(label))
-            res_w = svm.predict(data_pred)
-            score_w = svm.decision_function(data_pred)
-
-            res_word.append(res_w)
-            score_word.append(score_w)
+            # sessions = [wdata.iloc[z, 0] for z in range(len(wdata)) if ldata_labels[z] == label]
+            #
+            # models = wdata[wdata.id.isin(sessions)]
+            # models_labels = models.iloc[:, -1]
+            # models = models.iloc[:, 1:-1]
+            #
+            # if not predicters.get(str(label), False):
+            #     svm = SVC(kernel=self._kernel, C=self._C, gamma=self._gamma)
+            #     svm.fit(models, models_labels)
+            #     predicters[str(label)] = svm
+            #
+            # svm = predicters.get(str(label))
+            # res_w = svm.predict(data_pred)
+            # score_w = svm.decision_function(data_pred)
+            #
+            # res_word.append(res_w)
+            # score_word.append(score_w)
 
         return (res_label, score_label, res_word, score_word, bin_labels)
 
 
-class SVM_KNN_Predicter(Predicter):
-    def __init__(self, loader=None, kernel='rbf', c=1.0, gamma='auto', words_num=20, seq_len=3, wheights=1):
-        """
-        :param loader:  object of the type Loader. It contains all the data about CGM and
-                        is able to generate the models with which the classifier will work.
-        :param kernel: 'rbf', 'linear', 'poly', 'sigmoid'. Kernel of the algortihm SVM
-        :param words_num:   number of words of the vocabulary generated
-        :param seq_len: number of sessions of the sequences generated
-        """
-        super().__init__(loader, words_num, seq_len, wheights)
-        self._kernel = kernel
-        self._C = c
-        self._gamma = gamma
+class SVM_KNN_Predicter(SVMPredicter):
 
     def _predict(self, train_index, test_index):
         """
